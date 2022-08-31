@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] ; then
+    echo "Usage: $(basename $0) [args] <playlist_link>"
+    echo ' Args: -r --playlist-revese'
+    echo '       '
+    exit 1
+fi
+
+if [[ $# -eq 1 ]] ; then
+	if [[ $1 != *"playlist"* ]]; then
+  		echo "Not playlist argument!"
+		exit 2
+	else
+		playlist=$1
+	fi
+fi
+
+if [[ $# -eq 2 ]] ; then
+	if [[ $1 != "-r" ]]; then
+		echo "Usage: $(basename $0) [args] <playlist_link>"
+		echo ' Args: -r --playlist-revese'
+		exit 1
+	else
+		playlist_reverse="--playlist-reverse"
+		if [[ $2 != *"playlist"* ]]; then
+  			echo "Not playlist argument!"
+			exit 2
+		else
+			playlist=$2
+		fi
+
+	fi
+fi
+
+
+
+echo $playlist_reverse
+
+echo $1
+echo $2
+
+youtube-dl --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 48K $playlist_reverse --output "%(playlist_uploader)s/%(playlist)s/%(playlist_index)02d - %(title)s.%(ext)s" --yes-playlist $playlist
